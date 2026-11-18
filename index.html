@@ -611,5 +611,39 @@ $("downloadReport").addEventListener("click",()=>{
 });
 
 </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async function () {
+  const SUPABASE_URL = "https://mzrcrujenfrznfyvnmmz.supabase.co";
+  const SUPABASE_KEY = "PEGA_AQUI_TU_SB_PUBLISHABLE";
+
+  const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  try {
+    let { data: { session }, error } =
+      await client.auth.getSession();
+
+    if (error) throw error;
+
+    if (!session) {
+      const result = await client.auth.signInAnonymously();
+      if (result.error) throw result.error;
+    }
+
+    const result = await client.functions.invoke("track-visitor", {
+      body: {}
+    });
+
+    if (result.error) throw result.error;
+
+    console.log("CRY FOR MERCY: visita registrada");
+  } catch (error) {
+    console.error("Error de conexión:", error);
+  }
+})();
+</script>
 </body>
 </html>
