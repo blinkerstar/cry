@@ -610,27 +610,30 @@ $("downloadReport").addEventListener("click",()=>{
  const blob=new Blob([lines.join("\n")],{type:"text/plain"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="cry-for-mercy-security-report.txt";a.click();URL.revokeObjectURL(url);
 });
 
-</script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (async function () {
   const SUPABASE_URL = "https://mzrcrujenfrznfyvnmmz.supabase.co";
   const SUPABASE_KEY = "sb_publishable_kbaFur1X06xxUpWB_dDGCw_gfdF_RKX";
 
-  const client = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
   try {
-    let { data: { session }, error } =
-      await client.auth.getSession();
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    let { data, error } = await client.auth.getSession();
 
     if (error) throw error;
 
-    if (!session) {
+    if (!data.session) {
       const result = await client.auth.signInAnonymously();
       if (result.error) throw result.error;
+      data.session = result.data.session;
+    }
+
+    if (!data.session) {
+      throw new Error("No se pudo crear la sesión anónima");
     }
 
     const result = await client.functions.invoke("track-visitor", {
@@ -639,11 +642,12 @@ $("downloadReport").addEventListener("click",()=>{
 
     if (result.error) throw result.error;
 
-    console.log("CRY FOR MERCY: visita registrada");
-  }} catch (error) {
-  console.error("Error de conexión:", error);
-  alert("ERROR SUPABASE: " + error.message);
-}
+    alert("CONEXIÓN CORRECTA: visitante registrado");
+
+  } catch (error) {
+    console.error("CRY FOR MERCY:", error);
+    alert("ERROR SUPABASE: " + error.message);
+  }
 })();
 </script>
 </body>
