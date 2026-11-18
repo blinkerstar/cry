@@ -615,7 +615,7 @@ $("downloadReport").addEventListener("click",()=>{
 <script>
 (async function () {
   const SUPABASE_URL = "https://mzrcrujenfrznfyvnmmz.supabase.co";
-  const SUPABASE_KEY = "PEGA_AQUI_TU_SB_PUBLISHABLE";
+  const SUPABASE_KEY = "sb_publishable_kbaFur1X06xxUpWB_dDGCw_gfdF_RKX";
 
   const client = window.supabase.createClient(
     SUPABASE_URL,
@@ -640,9 +640,10 @@ $("downloadReport").addEventListener("click",()=>{
     if (result.error) throw result.error;
 
     console.log("CRY FOR MERCY: visita registrada");
-  } catch (error) {
-    console.error("Error de conexión:", error);
-  }
+  }} catch (error) {
+  console.error("Error de conexión:", error);
+  alert("ERROR SUPABASE: " + error.message);
+}
 })();
 </script>
 </body>
